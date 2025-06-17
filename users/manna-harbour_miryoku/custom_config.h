@@ -5,3 +5,5 @@
 
 #pragma once
 
+enum custom_keycodes_user {
+    DESIGN_TOG = SAFE_RANGE,
