@@ -83,6 +83,8 @@ combo_t key_combos[COMBO_COUNT] = {
   COMBO(thumbcombos_mouse, KC_BTN3),
   COMBO(thumbcombos_media, KC_MUTE),
   COMBO(thumbcombos_num, KC_DOT),
+  COMBO(esc_combo, KC_ESC),
+  COMBO(design_layer_combo, DESIGN_TOG),
   #if defined (MIRYOKU_LAYERS_FLIP)
   COMBO(thumbcombos_sym, KC_RPRN),
   #else
