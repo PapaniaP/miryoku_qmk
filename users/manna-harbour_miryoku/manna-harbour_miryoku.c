@@ -39,6 +39,16 @@ MIRYOKU_LAYER_LIST
 #undef MIRYOKU_X
 };
 
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+        case DESIGN_TOG:
+            if (record->event.pressed) {
+                layer_invert(U_DESIGN);
+            }
+            return false;
+    }
+    return true;
+}
 
 // keymap
 
