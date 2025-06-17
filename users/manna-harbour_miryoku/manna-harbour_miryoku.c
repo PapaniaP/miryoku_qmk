@@ -68,6 +68,8 @@ const uint16_t PROGMEM thumbcombos_nav[] = {KC_ENT, KC_BSPC, COMBO_END};
 const uint16_t PROGMEM thumbcombos_mouse[] = {KC_BTN2, KC_BTN1, COMBO_END};
 const uint16_t PROGMEM thumbcombos_media[] = {KC_MSTP, KC_MPLY, COMBO_END};
 const uint16_t PROGMEM thumbcombos_num[] = {KC_0, KC_MINS, COMBO_END};
+const uint16_t PROGMEM esc_combo[] = {LT(U_MOUSE, KC_TAB), LT(U_SYM, KC_ENT), COMBO_END};
+const uint16_t PROGMEM design_layer_combo[] = {LT(U_NAV, KC_SPC), LT(U_NUM, KC_BSPC), COMBO_END};
   #if defined (MIRYOKU_LAYERS_FLIP)
 const uint16_t PROGMEM thumbcombos_sym[] = {KC_UNDS, KC_LPRN, COMBO_END};
   #else
