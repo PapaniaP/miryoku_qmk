@@ -39,16 +39,6 @@ MIRYOKU_LAYER_LIST
 #undef MIRYOKU_X
 };
 
-bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    switch (keycode) {
-        case DESIGN_TOG:
-            if (record->event.pressed) {
-                layer_invert(U_DESIGN);
-            }
-            return false;
-    }
-    return true;
-}
 
 // keymap
 
@@ -78,8 +68,12 @@ const uint16_t PROGMEM thumbcombos_nav[] = {KC_ENT, KC_BSPC, COMBO_END};
 const uint16_t PROGMEM thumbcombos_mouse[] = {KC_BTN2, KC_BTN1, COMBO_END};
 const uint16_t PROGMEM thumbcombos_media[] = {KC_MSTP, KC_MPLY, COMBO_END};
 const uint16_t PROGMEM thumbcombos_num[] = {KC_0, KC_MINS, COMBO_END};
-const uint16_t PROGMEM esc_combo[] = {LT(U_MOUSE, KC_TAB), LT(U_SYM, KC_ENT), COMBO_END};
-const uint16_t PROGMEM design_layer_combo[] = {LT(U_NAV, KC_SPC), LT(U_NUM, KC_BSPC), COMBO_END};
+// Cross-hand combos (synced with ZMK)
+// Note: These work best with Colemak-DH layout
+const uint16_t PROGMEM esc_combo[] = {KC_G, KC_M, COMBO_END};  // Inner home row cross-hand
+const uint16_t PROGMEM hyperkey_combo[] = {KC_Z, KC_SLSH, COMBO_END};  // Bottom corners
+const uint16_t PROGMEM f13_combo[] = {KC_D, KC_H, COMBO_END};  // Bottom row cross-hand
+const uint16_t PROGMEM dictation_combo[] = {KC_X, KC_C, COMBO_END};  // Left hand X+C
   #if defined (MIRYOKU_LAYERS_FLIP)
 const uint16_t PROGMEM thumbcombos_sym[] = {KC_UNDS, KC_LPRN, COMBO_END};
   #else
@@ -94,7 +88,9 @@ combo_t key_combos[COMBO_COUNT] = {
   COMBO(thumbcombos_media, KC_MUTE),
   COMBO(thumbcombos_num, KC_DOT),
   COMBO(esc_combo, KC_ESC),
-  COMBO(design_layer_combo, DESIGN_TOG),
+  COMBO(hyperkey_combo, HYPR(KC_NO)),  // Shift+Ctrl+Alt+GUI
+  COMBO(f13_combo, KC_F13),
+  COMBO(dictation_combo, KC_F24),  // F24 for global dictation shortcut
   #if defined (MIRYOKU_LAYERS_FLIP)
   COMBO(thumbcombos_sym, KC_RPRN),
   #else
