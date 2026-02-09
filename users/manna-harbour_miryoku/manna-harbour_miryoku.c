@@ -69,7 +69,29 @@ const key_override_t **key_overrides = (const key_override_t *[]){
 };
 
 
-// thumb combos
+// combos
+
+enum combo_events {
+  U_COMBO_ESC,
+  U_COMBO_HYPER,
+  U_COMBO_F13,
+  U_COMBO_F19,
+#if defined (MIRYOKU_KLUDGE_THUMBCOMBOS)
+  U_COMBO_THUMBCOMBOS_BASE_RIGHT,
+  U_COMBO_THUMBCOMBOS_BASE_LEFT,
+  U_COMBO_THUMBCOMBOS_NAV,
+  U_COMBO_THUMBCOMBOS_MOUSE,
+  U_COMBO_THUMBCOMBOS_MEDIA,
+  U_COMBO_THUMBCOMBOS_NUM,
+  U_COMBO_THUMBCOMBOS_SYM,
+  U_COMBO_THUMBCOMBOS_FUN,
+#endif
+};
+
+const uint16_t PROGMEM esc_combo[] = {KC_G, KC_M, COMBO_END};
+const uint16_t PROGMEM hyperkey_combo[] = {KC_Z, KC_SLSH, COMBO_END};
+const uint16_t PROGMEM f13_combo[] = {KC_D, KC_H, COMBO_END};
+const uint16_t PROGMEM f19_combo[] = {KC_C, KC_COMM, COMBO_END};
 
 #if defined (MIRYOKU_KLUDGE_THUMBCOMBOS)
 const uint16_t PROGMEM thumbcombos_base_right[] = {LT(U_SYM, KC_ENT), LT(U_NUM, KC_BSPC), COMBO_END};
@@ -78,28 +100,56 @@ const uint16_t PROGMEM thumbcombos_nav[] = {KC_ENT, KC_BSPC, COMBO_END};
 const uint16_t PROGMEM thumbcombos_mouse[] = {KC_BTN2, KC_BTN1, COMBO_END};
 const uint16_t PROGMEM thumbcombos_media[] = {KC_MSTP, KC_MPLY, COMBO_END};
 const uint16_t PROGMEM thumbcombos_num[] = {KC_0, KC_MINS, COMBO_END};
-const uint16_t PROGMEM esc_combo[] = {LT(U_MOUSE, KC_TAB), LT(U_SYM, KC_ENT), COMBO_END};
-const uint16_t PROGMEM design_layer_combo[] = {LT(U_NAV, KC_SPC), LT(U_NUM, KC_BSPC), COMBO_END};
   #if defined (MIRYOKU_LAYERS_FLIP)
 const uint16_t PROGMEM thumbcombos_sym[] = {KC_UNDS, KC_LPRN, COMBO_END};
   #else
 const uint16_t PROGMEM thumbcombos_sym[] = {KC_RPRN, KC_UNDS, COMBO_END};
   #endif
 const uint16_t PROGMEM thumbcombos_fun[] = {KC_SPC, KC_TAB, COMBO_END};
-combo_t key_combos[COMBO_COUNT] = {
-  COMBO(thumbcombos_base_right, LT(U_FUN, KC_DEL)),
-  COMBO(thumbcombos_base_left, LT(U_MEDIA, KC_ESC)),
-  COMBO(thumbcombos_nav, KC_DEL),
-  COMBO(thumbcombos_mouse, KC_BTN3),
-  COMBO(thumbcombos_media, KC_MUTE),
-  COMBO(thumbcombos_num, KC_DOT),
-  COMBO(esc_combo, KC_ESC),
-  COMBO(design_layer_combo, DESIGN_TOG),
-  #if defined (MIRYOKU_LAYERS_FLIP)
-  COMBO(thumbcombos_sym, KC_RPRN),
-  #else
-  COMBO(thumbcombos_sym, KC_LPRN),
-  #endif
-  COMBO(thumbcombos_fun, KC_APP)
-};
 #endif
+
+combo_t key_combos[COMBO_COUNT] = {
+  [U_COMBO_ESC] = COMBO_ACTION(esc_combo),
+  [U_COMBO_HYPER] = COMBO_ACTION(hyperkey_combo),
+  [U_COMBO_F13] = COMBO_ACTION(f13_combo),
+  [U_COMBO_F19] = COMBO_ACTION(f19_combo),
+#if defined (MIRYOKU_KLUDGE_THUMBCOMBOS)
+  [U_COMBO_THUMBCOMBOS_BASE_RIGHT] = COMBO(thumbcombos_base_right, LT(U_FUN, KC_DEL)),
+  [U_COMBO_THUMBCOMBOS_BASE_LEFT] = COMBO(thumbcombos_base_left, LT(U_MEDIA, KC_ESC)),
+  [U_COMBO_THUMBCOMBOS_NAV] = COMBO(thumbcombos_nav, KC_DEL),
+  [U_COMBO_THUMBCOMBOS_MOUSE] = COMBO(thumbcombos_mouse, KC_BTN3),
+  [U_COMBO_THUMBCOMBOS_MEDIA] = COMBO(thumbcombos_media, KC_MUTE),
+  [U_COMBO_THUMBCOMBOS_NUM] = COMBO(thumbcombos_num, KC_DOT),
+  #if defined (MIRYOKU_LAYERS_FLIP)
+  [U_COMBO_THUMBCOMBOS_SYM] = COMBO(thumbcombos_sym, KC_RPRN),
+  #else
+  [U_COMBO_THUMBCOMBOS_SYM] = COMBO(thumbcombos_sym, KC_LPRN),
+  #endif
+  [U_COMBO_THUMBCOMBOS_FUN] = COMBO(thumbcombos_fun, KC_APP),
+#endif
+};
+
+static bool combo_layer_is_base(void) {
+  return get_highest_layer(layer_state | default_layer_state) == U_BASE;
+}
+
+void process_combo_event(uint16_t combo_index, bool pressed) {
+  if (!pressed || !combo_layer_is_base()) {
+    return;
+  }
+
+  switch (combo_index) {
+    case U_COMBO_ESC:
+      tap_code16(KC_ESC);
+      break;
+    case U_COMBO_HYPER:
+      set_oneshot_mods(MOD_MASK_HYPR);
+      break;
+    case U_COMBO_F13:
+      tap_code16(KC_F13);
+      break;
+    case U_COMBO_F19:
+      tap_code16(KC_F19);
+      break;
+  }
+}
