@@ -39,17 +39,6 @@ MIRYOKU_LAYER_LIST
 #undef MIRYOKU_X
 };
 
-bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    switch (keycode) {
-        case HYPERKEY:
-            if (record->event.pressed) {
-                set_oneshot_mods(MOD_LSFT | MOD_LCTL | MOD_LALT | MOD_LGUI);
-            }
-            return false;
-    }
-    return true;
-}
-
 // keymap
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -88,7 +77,6 @@ const uint16_t PROGMEM thumbcombos_fun[] = {KC_SPC, KC_TAB, COMBO_END};
 
 // Cross-hand combos (ported from ZMK custom_combos.dtsi)
 const uint16_t PROGMEM combo_esc_gm[] = {KC_G, KC_M, COMBO_END};                                  // ESC: G + M (positions 14+15)
-const uint16_t PROGMEM combo_hyperkey[] = {LT(U_BUTTON,KC_Z), LT(U_BUTTON,KC_SLSH), COMBO_END};   // Hyper: Z + / (positions 20+29)
 const uint16_t PROGMEM combo_leader_f13[] = {KC_D, KC_H, COMBO_END};                               // F13 Leader: D + H (positions 23+26)
 const uint16_t PROGMEM combo_dictation_f19[] = {KC_C, KC_COMM, COMBO_END};                         // F19 Dictation: C + , (positions 22+27)
 
@@ -108,7 +96,6 @@ combo_t key_combos[COMBO_COUNT] = {
   COMBO(thumbcombos_fun, KC_APP),
   // Ported from ZMK Cradio
   COMBO(combo_esc_gm, KC_ESC),
-  COMBO(combo_hyperkey, HYPERKEY),
   COMBO(combo_leader_f13, KC_F13),
   COMBO(combo_dictation_f19, KC_F19),
 };
