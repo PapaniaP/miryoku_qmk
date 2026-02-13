@@ -1,0 +1,11 @@
+# Build A-Dux with Miryoku (Colemak-DH, default nav, mac clipboard)
+
+name: 'Build A-Dux'
+on: workflow_dispatch
+jobs:
+  build:
+    uses: ./.github/workflows/main.yml
+    with:
+      keyboard: '["a_dux"]'
+      nav: '["default"]'
+      clipboard: '["mac"]'

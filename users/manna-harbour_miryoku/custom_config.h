@@ -5,12 +5,14 @@
 
 #pragma once
 
-// Add our custom keycodes
+// ── Custom Keycodes ──────────────────────────────────────────────
 enum custom_keycodes_user {
     DESIGN_TOG = SAFE_RANGE,
+    HYPERKEY,                  // one-shot Shift+Ctrl+Alt+GUI
+    HT_CAPS_Q,                // tap = Q, hold = Caps Lock
 };
 
-// Add our design layer to the official layer list
+// ── DESIGN Layer ─────────────────────────────────────────────────
 #define MIRYOKU_LAYER_LIST \
 MIRYOKU_X(BASE,   "Base") \
 MIRYOKU_X(EXTRA,  "Extra") \
@@ -24,5 +26,14 @@ MIRYOKU_X(SYM,    "Sym") \
 MIRYOKU_X(FUN,    "Fun") \
 MIRYOKU_X(DESIGN, "Design")
 
-// Set default mapping for the design layer
 #define MIRYOKU_LAYERMAPPING_DESIGN MIRYOKU_MAPPING
+
+// ── Base Layer Override (Colemak-DH with HT_CAPS_Q) ──────────────
+// Identical to stock MIRYOKU_ALTERNATIVES_BASE_COLEMAKDH except
+// position 0: HT_CAPS_Q instead of KC_Q.
+// Defined here so it takes priority over miryoku_layer_selection.h.
+#define MIRYOKU_LAYER_BASE \
+HT_CAPS_Q,            KC_W,              KC_F,              KC_P,              KC_B,              KC_J,              KC_L,              KC_U,              KC_Y,              KC_QUOT,           \
+LGUI_T(KC_A),      LALT_T(KC_R),      LCTL_T(KC_S),      LSFT_T(KC_T),      KC_G,              KC_M,              LSFT_T(KC_N),      LCTL_T(KC_E),      LALT_T(KC_I),      LGUI_T(KC_O),      \
+LT(U_BUTTON,KC_Z), ALGR_T(KC_X),      KC_C,              KC_D,              KC_V,              KC_K,              KC_H,              KC_COMM,           ALGR_T(KC_DOT),    LT(U_BUTTON,KC_SLSH),\
+U_NP,              U_NP,              LT(U_MEDIA,KC_ESC),LT(U_NAV,KC_SPC),  LT(U_MOUSE,KC_TAB),LT(U_SYM,KC_ENT),  LT(U_NUM,KC_BSPC), LT(U_FUN,KC_DEL),  U_NP,              U_NP

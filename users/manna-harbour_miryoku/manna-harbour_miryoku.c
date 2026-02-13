@@ -39,11 +39,35 @@ MIRYOKU_LAYER_LIST
 #undef MIRYOKU_X
 };
 
+// HT_CAPS_Q: hold-tap implementation (tap = Q, hold = Caps Lock)
+static uint16_t ht_caps_timer;
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case DESIGN_TOG:
             if (record->event.pressed) {
                 layer_invert(U_DESIGN);
+            }
+            return false;
+
+        case HYPERKEY:
+            // One-shot all four modifiers (matches ZMK: &sk LSHFT &sk LCTRL &sk LALT &sk LGUI)
+            if (record->event.pressed) {
+                set_oneshot_mods(MOD_LSFT | MOD_LCTL | MOD_LALT | MOD_LGUI);
+            }
+            return false;
+
+        case HT_CAPS_Q:
+            // Tap-preferred hold-tap: tap = Q, hold (>200ms) = Caps Lock
+            // Matches ZMK: &ht_caps CAPS Q (flavor "tap-preferred", 200ms)
+            if (record->event.pressed) {
+                ht_caps_timer = timer_read();
+            } else {
+                if (timer_elapsed(ht_caps_timer) < TAPPING_TERM) {
+                    tap_code(KC_Q);
+                } else {
+                    tap_code(KC_CAPS);
+                }
             }
             return false;
     }
@@ -86,6 +110,13 @@ const uint16_t PROGMEM thumbcombos_sym[] = {KC_UNDS, KC_LPRN, COMBO_END};
 const uint16_t PROGMEM thumbcombos_sym[] = {KC_RPRN, KC_UNDS, COMBO_END};
   #endif
 const uint16_t PROGMEM thumbcombos_fun[] = {KC_SPC, KC_TAB, COMBO_END};
+
+// Cross-hand combos (ported from ZMK custom_combos.dtsi)
+const uint16_t PROGMEM combo_esc_gm[] = {KC_G, KC_M, COMBO_END};                                  // ESC: G + M (positions 14+15)
+const uint16_t PROGMEM combo_hyperkey[] = {LT(U_BUTTON,KC_Z), LT(U_BUTTON,KC_SLSH), COMBO_END};   // Hyper: Z + / (positions 20+29)
+const uint16_t PROGMEM combo_leader_f13[] = {KC_D, KC_H, COMBO_END};                               // F13 Leader: D + H (positions 23+26)
+const uint16_t PROGMEM combo_dictation_f19[] = {KC_C, KC_COMM, COMBO_END};                         // F19 Dictation: C + , (positions 22+27)
+
 combo_t key_combos[COMBO_COUNT] = {
   COMBO(thumbcombos_base_right, LT(U_FUN, KC_DEL)),
   COMBO(thumbcombos_base_left, LT(U_MEDIA, KC_ESC)),
@@ -100,6 +131,11 @@ combo_t key_combos[COMBO_COUNT] = {
   #else
   COMBO(thumbcombos_sym, KC_LPRN),
   #endif
-  COMBO(thumbcombos_fun, KC_APP)
+  COMBO(thumbcombos_fun, KC_APP),
+  // Ported from ZMK Cradio
+  COMBO(combo_esc_gm, KC_ESC),
+  COMBO(combo_hyperkey, HYPERKEY),
+  COMBO(combo_leader_f13, KC_F13),
+  COMBO(combo_dictation_f19, KC_F19),
 };
 #endif
