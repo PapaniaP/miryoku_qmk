@@ -39,35 +39,11 @@ MIRYOKU_LAYER_LIST
 #undef MIRYOKU_X
 };
 
-// HT_CAPS_Q: hold-tap implementation (tap = Q, hold = Caps Lock)
-static uint16_t ht_caps_timer;
-
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
-        case DESIGN_TOG:
-            if (record->event.pressed) {
-                layer_invert(U_DESIGN);
-            }
-            return false;
-
         case HYPERKEY:
-            // One-shot all four modifiers (matches ZMK: &sk LSHFT &sk LCTRL &sk LALT &sk LGUI)
             if (record->event.pressed) {
                 set_oneshot_mods(MOD_LSFT | MOD_LCTL | MOD_LALT | MOD_LGUI);
-            }
-            return false;
-
-        case HT_CAPS_Q:
-            // Tap-preferred hold-tap: tap = Q, hold (>200ms) = Caps Lock
-            // Matches ZMK: &ht_caps CAPS Q (flavor "tap-preferred", 200ms)
-            if (record->event.pressed) {
-                ht_caps_timer = timer_read();
-            } else {
-                if (timer_elapsed(ht_caps_timer) < TAPPING_TERM) {
-                    tap_code(KC_Q);
-                } else {
-                    tap_code(KC_CAPS);
-                }
             }
             return false;
     }
@@ -103,7 +79,6 @@ const uint16_t PROGMEM thumbcombos_mouse[] = {KC_BTN2, KC_BTN1, COMBO_END};
 const uint16_t PROGMEM thumbcombos_media[] = {KC_MSTP, KC_MPLY, COMBO_END};
 const uint16_t PROGMEM thumbcombos_num[] = {KC_0, KC_MINS, COMBO_END};
 const uint16_t PROGMEM esc_combo[] = {LT(U_MOUSE, KC_TAB), LT(U_SYM, KC_ENT), COMBO_END};
-const uint16_t PROGMEM design_layer_combo[] = {LT(U_NAV, KC_SPC), LT(U_NUM, KC_BSPC), COMBO_END};
   #if defined (MIRYOKU_LAYERS_FLIP)
 const uint16_t PROGMEM thumbcombos_sym[] = {KC_UNDS, KC_LPRN, COMBO_END};
   #else
@@ -125,7 +100,6 @@ combo_t key_combos[COMBO_COUNT] = {
   COMBO(thumbcombos_media, KC_MUTE),
   COMBO(thumbcombos_num, KC_DOT),
   COMBO(esc_combo, KC_ESC),
-  COMBO(design_layer_combo, DESIGN_TOG),
   #if defined (MIRYOKU_LAYERS_FLIP)
   COMBO(thumbcombos_sym, KC_RPRN),
   #else
